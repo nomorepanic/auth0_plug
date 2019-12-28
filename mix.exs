@@ -40,7 +40,7 @@ defmodule Auth0Plug.MixProject do
       {:dummy, "~> 1.2", only: :test},
       {:jason, "~> 1.1"},
       {:jose, "~> 1.9"},
-      {:plug, "~> 1.0"}
+      {:plug, "~> 1.8"}
     ]
   end
 end
