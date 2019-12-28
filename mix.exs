@@ -22,6 +22,7 @@ defmodule Auth0Plug.MixProject do
       {:credo, "~> 0.9", only: :dev, runtime: false},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
       {:dummy, "~> 1.2", only: :test},
+      {:jason, "~> 1.1"},
       {:jose, "~> 1.9"},
       {:plug, "~> 1.0"}
     ]
