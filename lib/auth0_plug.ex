@@ -5,9 +5,10 @@ defmodule Auth0Plug do
   alias JOSE.{JWK, JWT}
   alias Plug.Conn
 
+  @conn_key Application.get_env(:auth0_plug, :conn_key)
   @realm Application.get_env(:auth0_plug, :realm)
   @secret Application.get_env(:auth0_plug, :secret)
-  @conn_key Application.get_env(:auth0_plug, :conn_key)
+  @return_401 Application.get_env(:auth0_plug, :return_401)
 
   def init(options) do
     options
@@ -39,14 +40,18 @@ defmodule Auth0Plug do
   Return a 401 response.
   """
   def unauthorized(conn) do
-    conn
-    |> Conn.put_resp_header(
-      "www-authenticate",
-      "Bearer realm=\"#{@realm}\", error=\"invalid_token\""
-    )
-    |> Conn.put_resp_content_type("application/json")
-    |> Conn.send_resp(401, Jason.encode!(%{}))
-    |> Conn.halt()
+    if @return_401 do
+      conn
+      |> Conn.put_resp_header(
+        "www-authenticate",
+        "Bearer realm=\"#{@realm}\", error=\"invalid_token\""
+      )
+      |> Conn.put_resp_content_type("application/json")
+      |> Conn.send_resp(401, Jason.encode!(%{}))
+      |> Conn.halt()
+    else
+      conn
+    end
   end
 
   def call(conn, _options) do
