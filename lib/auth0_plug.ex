@@ -20,7 +20,9 @@ defmodule Auth0Plug do
   def get_jwt(conn) do
     conn
     |> Conn.get_req_header("authorization")
-    |> List.first()
+    |> List.to_string()
+    |> String.split(" ")
+    |> List.last()
   end
 
   def verify(token) do

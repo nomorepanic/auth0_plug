@@ -12,14 +12,14 @@ defmodule Auth0PlugTest do
   end
 
   test "get_jwt/1" do
-    dummy Conn, [{"get_req_header", fn _a, _b -> [:header] end}] do
-      assert Auth0Plug.get_jwt(:conn) == :header
+    dummy Conn, [{"get_req_header", fn _a, _b -> ["bearer token"] end}] do
+      assert Auth0Plug.get_jwt(:conn) == "token"
     end
   end
 
   test "get_jwt/1 with an empty list" do
     dummy Conn, [{"get_req_header", fn _a, _b -> [] end}] do
-      assert Auth0Plug.get_jwt(:conn) == nil
+      assert Auth0Plug.get_jwt(:conn) == ""
     end
   end
 
