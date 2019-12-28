@@ -56,11 +56,16 @@ defmodule Auth0Plug do
     end
   end
 
+  def put_jwt(conn, jwt) do
+    value = Map.get(jwt, :fields)
+    Conn.put_private(conn, @conn_key, value)
+  end
+
   def call(conn, _options) do
     token = Auth0Plug.get_jwt(conn)
 
     case Auth0Plug.verify(token) do
-      {:ok, jwt} -> Conn.put_private(conn, @conn_key, jwt)
+      {:ok, jwt} -> Auth0Plug.put_jwt(conn, jwt)
       {:error, _jwt} -> Auth0Plug.unauthorized(conn)
     end
   end
