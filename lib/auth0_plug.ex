@@ -6,6 +6,7 @@ defmodule Auth0Plug do
   alias Plug.Conn
 
   @conn_key Application.get_env(:auth0_plug, :conn_key)
+  @key_to_extract Application.get_env(:auth0_plug, :key_to_extract)
   @realm Application.get_env(:auth0_plug, :realm)
   @secret Application.get_env(:auth0_plug, :secret)
   @return_401 Application.get_env(:auth0_plug, :return_401)
@@ -58,6 +59,14 @@ defmodule Auth0Plug do
 
   def put_jwt(conn, jwt) do
     value = Map.get(jwt, :fields)
+
+    value =
+      if @key_to_extract do
+        Map.get(value, @key_to_extract)
+      else
+        value
+      end
+
     Conn.put_private(conn, @conn_key, value)
   end
 
