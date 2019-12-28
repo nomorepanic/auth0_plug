@@ -33,3 +33,10 @@ that, you can disable it in the options:
 config :auth0_plug,
     return_401: false
 ```
+
+It's possible to specify which key to extract from the JWT:
+
+```elixir
+config :auth0_plug,
+    key_to_extract: "email"
+```
