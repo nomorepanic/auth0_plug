@@ -7,6 +7,7 @@ defmodule Auth0Plug do
 
   @realm Application.get_env(:auth0_plug, :realm)
   @secret Application.get_env(:auth0_plug, :secret)
+  @conn_key Application.get_env(:auth0_plug, :conn_key)
 
   def init(options) do
     options
@@ -46,6 +47,11 @@ defmodule Auth0Plug do
   end
 
   def call(conn, _options) do
-    conn
+    token = Auth0Plug.get_jwt(conn)
+
+    case Auth0Plug.verify(token) do
+      {:ok, jwt} -> Conn.put_private(conn, @conn_key, jwt)
+      {:error, _jwt} -> Auth0Plug.unauthorized(conn)
+    end
   end
 end

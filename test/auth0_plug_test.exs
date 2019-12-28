@@ -67,6 +67,23 @@ defmodule Auth0PlugTest do
   end
 
   test "call/2" do
-    assert Auth0Plug.call(:conn, :options) == :conn
+    dummy Conn, [{"put_private", fn _a, _b, _c -> :conn end}] do
+      dummy Auth0Plug, [{"get_jwt", :token}, {"verify", {:ok, :jwt}}] do
+        assert Auth0Plug.call(:conn, :options) == :conn
+        assert called(Auth0Plug.get_jwt(:conn))
+        assert called(Conn.put_private(:conn, :auth0_plug_jwt, :jwt))
+      end
+    end
+  end
+
+  test "call/2, unauthorized" do
+    dummy Auth0Plug, [
+      {"get_jwt", :token},
+      {"verify", {:error, :jwt}},
+      {"unauthorized", :unauthorized}
+    ] do
+      assert Auth0Plug.call(:conn, :options) == :unauthorized
+      assert called(Auth0Plug.unauthorized(:conn))
+    end
   end
 end
