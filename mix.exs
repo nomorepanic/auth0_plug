@@ -7,13 +7,29 @@ defmodule Auth0Plug.MixProject do
       version: "0.1.0",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      description: description(),
+      package: package()
     ]
   end
 
   def application do
     [
       extra_applications: [:logger]
+    ]
+  end
+
+  defp description do
+    "A plug for verifing Auth0 JWTs."
+  end
+
+  defp package do
+    [
+      name: :auth0_plug,
+      files: ~w(mix.exs lib .formatter.exs README.md LICENSE),
+      maintainers: ["Jacopo Cascioli"],
+      licenses: ["MPL 2.0"],
+      links: %{"GitHub" => "https://github.com/Vesuvium/auth0_plug"}
     ]
   end
 
