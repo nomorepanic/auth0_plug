@@ -5,6 +5,7 @@ defmodule Auth0Plug do
   alias JOSE.{JWK, JWT}
   alias Plug.Conn
 
+  @realm Application.get_env(:auth0_plug, :realm)
   @secret Application.get_env(:auth0_plug, :secret)
 
   def init(options) do
@@ -31,6 +32,17 @@ defmodule Auth0Plug do
       {false, jwt, _jws} -> {:error, jwt}
       {:error, e} -> {:error, e}
     end
+  end
+
+  def unauthorized(conn) do
+    conn
+    |> Conn.put_resp_header(
+      "www-authenticate",
+      "Bearer realm=\"#{@realm}\", error=\"invalid_token\""
+    )
+    |> Conn.put_resp_content_type("application/json")
+    |> Conn.send_resp(401, Jason.encode!(%{}))
+    |> Conn.halt()
   end
 
   def call(conn, _options) do

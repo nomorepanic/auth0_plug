@@ -49,6 +49,23 @@ defmodule Auth0PlugTest do
     end
   end
 
+  test "unauthorized/1" do
+    auth_header = "Bearer realm=\"realm\", error=\"invalid_token\""
+    header_name = "www-authenticate"
+
+    dummy Conn, [
+      {"put_resp_header", fn _a, _b, _c -> :header end},
+      {"put_resp_content_type", fn _a, _b -> :content_type end},
+      {"send_resp", fn _a, _b, _c -> :resp end},
+      {"halt", :halt}
+    ] do
+      assert Auth0Plug.unauthorized(:conn) == :halt
+      assert called(Conn.put_resp_header(:conn, header_name, auth_header))
+      assert called(Conn.put_resp_content_type(:header, "application/json"))
+      assert called(Conn.send_resp(:content_type, 401, "{}"))
+    end
+  end
+
   test "call/2" do
     assert Auth0Plug.call(:conn, :options) == :conn
   end
