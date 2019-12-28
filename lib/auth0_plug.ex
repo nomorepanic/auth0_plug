@@ -35,6 +35,9 @@ defmodule Auth0Plug do
     end
   end
 
+  @doc """
+  Return a 401 response.
+  """
   def unauthorized(conn) do
     conn
     |> Conn.put_resp_header(
