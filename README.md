@@ -8,7 +8,7 @@ A plug for verifing Auth0 JWTs.
 Add to dependencies:
 
 ```elixir
-{:auth0_plug, "~> 0.1"}
+{:auth0_plug, "~> 1.0"}
 ```
 
 Configuration:
@@ -33,6 +33,15 @@ that, you can disable it in the options:
 config :auth0_plug,
     return_401: false
 ```
+
+If you want to customize the error message:
+
+
+```elixir
+config :auth0_plug,
+    unauthorized_message: "Your credentials are invalid"
+```
+
 
 It's possible to specify which key to extract from the JWT:
 
