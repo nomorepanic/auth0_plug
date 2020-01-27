@@ -56,7 +56,7 @@ defmodule Auth0Plug do
         "Bearer realm=\"#{@realm}\", error=\"invalid_token\""
       )
       |> Conn.put_resp_content_type("application/json")
-      |> Conn.send_resp(401, Jason.encode!(%{}))
+      |> Conn.send_resp(401, Auth0Plug.unauthorized_message())
       |> Conn.halt()
     else
       conn
