@@ -44,27 +44,34 @@ defmodule Auth0PlugTest do
   end
 
   test "verify/1" do
-    dummy JWK, [{"from_oct", :oct}] do
-      dummy JWT, [{"verify", fn _a, _b -> {true, :jwt, :jws} end}] do
-        assert Auth0Plug.verify(:token) == {:ok, :jwt}
-        assert called(JWK.from_oct("secret"))
-        assert called(JWT.verify(:oct, :token))
+    dummy Application, [{"get_env", fn _a, _b -> :secret end}] do
+      dummy JWK, [{"from_oct", :oct}] do
+        dummy JWT, [{"verify", fn _a, _b -> {true, :jwt, :jws} end}] do
+          assert Auth0Plug.verify(:token) == {:ok, :jwt}
+          assert called(Application.get_env(:auth0_plug, :secret))
+          assert called(JWK.from_oct(:secret))
+          assert called(JWT.verify(:oct, :token))
+        end
       end
     end
   end
 
   test "verify/1, invalid jwt" do
-    dummy JWK, [{"from_oct", :oct}] do
-      dummy JWT, [{"verify", fn _a, _b -> {:error, :e} end}] do
-        assert Auth0Plug.verify(:token) == {:error, :e}
+    dummy Application, [{"get_env", fn _a, _b -> :secret end}] do
+      dummy JWK, [{"from_oct", :oct}] do
+        dummy JWT, [{"verify", fn _a, _b -> {:error, :e} end}] do
+          assert Auth0Plug.verify(:token) == {:error, :e}
+        end
       end
     end
   end
 
   test "verify/1, error" do
-    dummy JWK, [{"from_oct", :oct}] do
-      dummy JWT, [{"verify", fn _a, _b -> {false, :jwt, :jws} end}] do
-        assert Auth0Plug.verify(:token) == {:error, :jwt}
+    dummy Application, [{"get_env", fn _a, _b -> :secret end}] do
+      dummy JWK, [{"from_oct", :oct}] do
+        dummy JWT, [{"verify", fn _a, _b -> {false, :jwt, :jws} end}] do
+          assert Auth0Plug.verify(:token) == {:error, :jwt}
+        end
       end
     end
   end

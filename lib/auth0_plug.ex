@@ -8,7 +8,6 @@ defmodule Auth0Plug do
   @conn_key Application.get_env(:auth0_plug, :conn_key)
   @key_to_extract Application.get_env(:auth0_plug, :key_to_extract)
   @realm Application.get_env(:auth0_plug, :realm)
-  @secret Application.get_env(:auth0_plug, :secret)
   @return_401 Application.get_env(:auth0_plug, :return_401)
 
   def init(options) do
@@ -34,7 +33,7 @@ defmodule Auth0Plug do
 
   def verify(token) do
     result =
-      @secret
+      Application.get_env(:auth0_plug, :secret)
       |> JWK.from_oct()
       |> JWT.verify(token)
 
