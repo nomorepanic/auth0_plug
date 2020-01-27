@@ -11,6 +11,26 @@ defmodule Auth0PlugTest do
     assert Auth0Plug.init(:options) == :options
   end
 
+  test "unauthorzied_message/1" do
+    default = "Your credentials are invalid."
+
+    dummy Application, [{"get_env", fn _a, _b, _c -> "message" end}] do
+      dummy Jason, [{"encode!", :json}] do
+        assert Auth0Plug.unauthorized_message() == :json
+
+        assert called(
+                 Application.get_env(
+                   :auth0_plug,
+                   :unauthorized_message,
+                   default
+                 )
+               )
+
+        assert called(Jason.encode!(%{"message" => "message"}))
+      end
+    end
+  end
+
   test "get_jwt/1" do
     dummy Conn, [{"get_req_header", fn _a, _b -> ["bearer token"] end}] do
       assert Auth0Plug.get_jwt(:conn) == "token"

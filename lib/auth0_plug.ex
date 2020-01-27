@@ -15,6 +15,12 @@ defmodule Auth0Plug do
     options
   end
 
+  def unauthorized_message do
+    default = "Your credentials are invalid."
+    message = Application.get_env(:auth0_plug, :unauthorized_message, default)
+    Jason.encode!(%{"message" => message})
+  end
+
   @doc """
   Extracts the jwt from the header, when present.
   """
