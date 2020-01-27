@@ -97,9 +97,12 @@ defmodule Auth0PlugTest do
   end
 
   test "put_jwt/2" do
-    dummy Conn, [{"put_private", fn _a, _b, _c -> :conn end}] do
-      Auth0Plug.put_jwt(:conn, %{fields: :fields})
-      assert called(Conn.put_private(:conn, :auth0_plug_jwt, :fields))
+    dummy Application, [{"get_env", fn _a, _b -> nil end}] do
+      dummy Conn, [{"put_private", fn _a, _b, _c -> :conn end}] do
+        Auth0Plug.put_jwt(:conn, %{fields: :fields})
+        assert called(Application.get_env(:auth0_plug, :key_to_extract))
+        assert called(Conn.put_private(:conn, :auth0_plug_jwt, :fields))
+      end
     end
   end
 
