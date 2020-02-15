@@ -76,6 +76,23 @@ defmodule Auth0PlugTest do
     end
   end
 
+  test "is_excluded?/1" do
+    conn = %{path_info: []}
+
+    dummy Application, [{"get_env", fn _a, _b -> [] end}] do
+      assert Auth0Plug.is_excluded?(conn) == false
+      assert called(Application.get_env(:auth0_plug, :exclude_from_401))
+    end
+  end
+
+  test "is_excluded?/1, true" do
+    conn = %{path_info: ["path"]}
+
+    dummy Application, [{"get_env", fn _a, _b -> ["path"] end}] do
+      assert Auth0Plug.is_excluded?(conn) == true
+    end
+  end
+
   test "unauthorized/1" do
     auth_header = "Bearer realm=\"realm\", error=\"invalid_token\""
     header_name = "www-authenticate"

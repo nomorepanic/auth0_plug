@@ -44,6 +44,14 @@ defmodule Auth0Plug do
   end
 
   @doc """
+  Whether the path is excluded.
+  """
+  def is_excluded?(conn) do
+    Application.get_env(:auth0_plug, :exclude_from_401)
+    |> Enum.member?(Enum.at(conn.path_info, 0))
+  end
+
+  @doc """
   Return a 401 response.
   """
   def unauthorized(conn) do
