@@ -127,13 +127,23 @@ defmodule Auth0PlugTest do
       {"send_resp", fn _a, _b, _c -> :resp end},
       {"halt", :halt}
     ] do
-      dummy Auth0Plug, [{"unauthorized_message", fn -> :message end}] do
+      dummy Auth0Plug, [
+        {"is_401?", true},
+        {"unauthorized_message", fn -> :message end}
+      ] do
         assert Auth0Plug.unauthorized(:conn) == :halt
+        assert called(Auth0Plug.is_401?(:conn))
         assert called(Conn.put_resp_header(:conn, header_name, auth_header))
         assert called(Conn.put_resp_content_type(:header, "application/json"))
         assert called(Auth0Plug.unauthorized_message())
         assert called(Conn.send_resp(:content_type, 401, :message))
       end
+    end
+  end
+
+  test "unauthorized/1, not 401" do
+    dummy Auth0Plug, [{"is_401?", false}] do
+      assert Auth0Plug.unauthorized(:conn) == :conn
     end
   end
 

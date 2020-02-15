@@ -7,7 +7,6 @@ defmodule Auth0Plug do
 
   @conn_key Application.get_env(:auth0_plug, :conn_key)
   @realm Application.get_env(:auth0_plug, :realm)
-  @return_401 Application.get_env(:auth0_plug, :return_401)
 
   def init(options) do
     options
@@ -73,7 +72,7 @@ defmodule Auth0Plug do
   Return a 401 response.
   """
   def unauthorized(conn) do
-    if @return_401 do
+    if Auth0Plug.is_401?(conn) do
       conn
       |> Conn.put_resp_header(
         "www-authenticate",
