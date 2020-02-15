@@ -52,6 +52,24 @@ defmodule Auth0Plug do
   end
 
   @doc """
+  Whether a 401 should be returned.
+
+  401s are return only when return_401 is set to true and the path is not in
+  exclude_from_401.
+  """
+  def is_401?(conn) do
+    if Application.get_env(:auth0_plug, :return_401) do
+      if Auth0Plug.is_excluded?(conn) do
+        false
+      else
+        true
+      end
+    else
+      false
+    end
+  end
+
+  @doc """
   Return a 401 response.
   """
   def unauthorized(conn) do

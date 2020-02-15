@@ -93,6 +93,30 @@ defmodule Auth0PlugTest do
     end
   end
 
+  test "is_401?/1" do
+    dummy Application, [{"get_env", fn _a, _b -> true end}] do
+      dummy Auth0Plug, [{"is_excluded?", false}] do
+        assert Auth0Plug.is_401?(:conn) == true
+        assert called(Application.get_env(:auth0_plug, :return_401))
+        assert called(Auth0Plug.is_excluded?(:conn))
+      end
+    end
+  end
+
+  test "is_401?/1, excluded" do
+    dummy Application, [{"get_env", fn _a, _b -> true end}] do
+      dummy Auth0Plug, [{"is_excluded?", true}] do
+        assert Auth0Plug.is_401?(:conn) == false
+      end
+    end
+  end
+
+  test "is_401?/1, false" do
+    dummy Application, [{"get_env", fn _a, _b -> false end}] do
+      assert Auth0Plug.is_401?(:conn) == false
+    end
+  end
+
   test "unauthorized/1" do
     auth_header = "Bearer realm=\"realm\", error=\"invalid_token\""
     header_name = "www-authenticate"
