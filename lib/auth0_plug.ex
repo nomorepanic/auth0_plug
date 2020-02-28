@@ -7,6 +7,12 @@ defmodule Auth0Plug do
 
   @conn_key Application.get_env(:auth0_plug, :conn_key)
   @realm Application.get_env(:auth0_plug, :realm)
+  @secret Application.get_env(:auth0_plug, :secret)
+
+  if @secret == nil do
+    "Auth0Plug's secret is set to nil. Authentication will always fail."
+    |> IO.warn()
+  end
 
   def init(options) do
     options
@@ -31,7 +37,7 @@ defmodule Auth0Plug do
 
   def verify(token) do
     result =
-      Application.get_env(:auth0_plug, :secret)
+      @secret
       |> JWK.from_oct()
       |> JWT.verify(token)
 
