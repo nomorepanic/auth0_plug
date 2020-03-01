@@ -4,7 +4,7 @@ defmodule Auth0Plug.MixProject do
   def project do
     [
       app: :auth0_plug,
-      version: "1.2.1",
+      version: "1.2.2",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
