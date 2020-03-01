@@ -28,6 +28,7 @@ defmodule Auth0Plug do
   """
   def is_excluded?(conn) do
     Application.get_env(:auth0_plug, :exclude_from_401)
+    |> List.insert_at(0, "/*_path")
     |> Enum.member?(elem(conn.private[:plug_route], 0))
   end
 

@@ -48,6 +48,14 @@ defmodule Auth0PlugTest do
     end
   end
 
+  test "is_excluded?/1, unmatched route" do
+    conn = %{private: %{plug_route: {"/*_path"}}}
+
+    dummy Application, [{"get_env", fn _a, _b -> ["path"] end}] do
+      assert Auth0Plug.is_excluded?(conn) == true
+    end
+  end
+
   test "is_401?/1" do
     dummy Application, [{"get_env", fn _a, _b -> true end}] do
       dummy Auth0Plug, [{"is_excluded?", false}] do
