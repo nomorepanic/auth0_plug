@@ -11,6 +11,15 @@ Add to dependencies:
 {:auth0_plug, "~> 1.2"}
 ```
 
+Put in your router after match and before dispatch:
+
+
+```elixir
+plug(:match)
+plug(Auth0Plug)
+plug(:dispatch)
+```
+
 Configuration:
 
 ```elixir
