@@ -51,17 +51,29 @@ defmodule Auth0Plug do
   end
 
   @doc """
+  Sends a 401.
+
+  This is a separate function so that it can be reused to send the same 401
+  when is not directly sent by Auth0Plug, for example to send a 401 on an
+  ignored route.
+  """
+  def send_401(conn) do
+    conn
+    |> Conn.put_resp_header(
+      "www-authenticate",
+      "Bearer realm=\"#{@realm}\", error=\"invalid_token\""
+    )
+    |> Conn.put_resp_content_type("application/json")
+    |> Conn.send_resp(401, Auth0Plug.unauthorized_message())
+  end
+
+  @doc """
   Return a 401 response.
   """
   def unauthorized(conn) do
     if Auth0Plug.is_401?(conn) do
       conn
-      |> Conn.put_resp_header(
-        "www-authenticate",
-        "Bearer realm=\"#{@realm}\", error=\"invalid_token\""
-      )
-      |> Conn.put_resp_content_type("application/json")
-      |> Conn.send_resp(401, Auth0Plug.unauthorized_message())
+      |> Auth0Plug.send_401()
       |> Conn.halt()
     else
       conn
