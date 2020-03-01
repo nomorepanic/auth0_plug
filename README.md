@@ -49,3 +49,10 @@ It's possible to specify which key to extract from the JWT:
 config :auth0_plug,
     key_to_extract: "email"
 ```
+
+To exclude paths from 401:
+
+```elixir
+config :auth0_plug,
+    exclude_from_401: ["/public", "/public/:id"]
+```
