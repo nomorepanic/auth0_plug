@@ -32,16 +32,16 @@ defmodule Auth0PlugTest do
   end
 
   test "is_excluded?/1" do
-    conn = %{path_info: []}
+    conn = %{private: %{plug_route: {"/"}}}
 
-    dummy Application, [{"get_env", fn _a, _b -> [] end}] do
+    dummy Application, [{"get_env", fn _a, _b -> ["path"] end}] do
       assert Auth0Plug.is_excluded?(conn) == false
       assert called(Application.get_env(:auth0_plug, :exclude_from_401))
     end
   end
 
   test "is_excluded?/1, true" do
-    conn = %{path_info: ["path"]}
+    conn = %{private: %{plug_route: {"path"}}}
 
     dummy Application, [{"get_env", fn _a, _b -> ["path"] end}] do
       assert Auth0Plug.is_excluded?(conn) == true
