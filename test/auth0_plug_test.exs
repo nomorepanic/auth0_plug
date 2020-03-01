@@ -2,7 +2,7 @@ defmodule Auth0PlugTest do
   use ExUnit.Case
   import Dummy
 
-  alias JOSE.{JWK, JWT}
+  alias Auth0Plug.Jwt
   alias Plug.Conn
 
   doctest Auth0Plug
@@ -27,44 +27,6 @@ defmodule Auth0PlugTest do
                )
 
         assert called(Jason.encode!(%{"message" => "message"}))
-      end
-    end
-  end
-
-  test "get_jwt/1" do
-    dummy Conn, [{"get_req_header", fn _a, _b -> ["bearer token"] end}] do
-      assert Auth0Plug.get_jwt(:conn) == "token"
-    end
-  end
-
-  test "get_jwt/1 with an empty list" do
-    dummy Conn, [{"get_req_header", fn _a, _b -> [] end}] do
-      assert Auth0Plug.get_jwt(:conn) == ""
-    end
-  end
-
-  test "verify/1" do
-    dummy JWK, [{"from_oct", :oct}] do
-      dummy JWT, [{"verify", fn _a, _b -> {true, :jwt, :jws} end}] do
-        assert Auth0Plug.verify(:token) == {:ok, :jwt}
-        assert called(JWK.from_oct("secret"))
-        assert called(JWT.verify(:oct, :token))
-      end
-    end
-  end
-
-  test "verify/1, invalid jwt" do
-    dummy JWK, [{"from_oct", :oct}] do
-      dummy JWT, [{"verify", fn _a, _b -> {:error, :e} end}] do
-        assert Auth0Plug.verify(:token) == {:error, :e}
-      end
-    end
-  end
-
-  test "verify/1, error" do
-    dummy JWK, [{"from_oct", :oct}] do
-      dummy JWT, [{"verify", fn _a, _b -> {false, :jwt, :jws} end}] do
-        assert Auth0Plug.verify(:token) == {:error, :jwt}
       end
     end
   end
@@ -140,36 +102,29 @@ defmodule Auth0PlugTest do
     end
   end
 
-  test "put_jwt/2" do
-    dummy Application, [{"get_env", fn _a, _b -> nil end}] do
-      dummy Conn, [{"put_private", fn _a, _b, _c -> :conn end}] do
-        Auth0Plug.put_jwt(:conn, %{fields: :fields})
-        assert called(Application.get_env(:auth0_plug, :key_to_extract))
-        assert called(Conn.put_private(:conn, :auth0_plug_jwt, :fields))
-      end
-    end
-  end
-
   test "call/2" do
-    dummy Auth0Plug, [
-      {"get_jwt", :token},
-      {"verify", {:ok, :jwt}},
-      {"put_jwt", fn _a, _b -> :conn end}
+    dummy Jwt, [
+      {"get", :token},
+      {"verify", fn _a, _b -> {:ok, :jwt} end},
+      {"put", fn _a, _b -> :conn end}
     ] do
       assert Auth0Plug.call(:conn, :options) == :conn
-      assert called(Auth0Plug.get_jwt(:conn))
-      assert called(Auth0Plug.put_jwt(:conn, :jwt))
+      assert called(Jwt.get(:conn))
+      assert called(Jwt.put(:conn, :jwt))
     end
   end
 
   test "call/2, unauthorized" do
-    dummy Auth0Plug, [
-      {"get_jwt", :token},
-      {"verify", {:error, :jwt}},
-      {"unauthorized", :unauthorized}
+    dummy Jwt, [
+      {"get", :token},
+      {"verify", fn _a, _b -> {:error, :jwt} end}
     ] do
-      assert Auth0Plug.call(:conn, :options) == :unauthorized
-      assert called(Auth0Plug.unauthorized(:conn))
+      dummy Auth0Plug, [
+        {"unauthorized", :unauthorized}
+      ] do
+        assert Auth0Plug.call(:conn, :options) == :unauthorized
+        assert called(Auth0Plug.unauthorized(:conn))
+      end
     end
   end
 end
