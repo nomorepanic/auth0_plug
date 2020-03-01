@@ -8,7 +8,7 @@ A plug for verifing Auth0 JWTs.
 Add to dependencies:
 
 ```elixir
-{:auth0_plug, "~> 1.0"}
+{:auth0_plug, "~> 1.2"}
 ```
 
 Configuration:
