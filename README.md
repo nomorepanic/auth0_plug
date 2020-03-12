@@ -20,7 +20,7 @@ plug(Auth0Plug)
 plug(:dispatch)
 ```
 
-Configuration:
+## Configuration
 
 ```elixir
 config :auth0_plug,
