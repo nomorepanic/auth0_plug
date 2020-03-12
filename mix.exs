@@ -20,7 +20,7 @@ defmodule Auth0Plug.MixProject do
   end
 
   defp description do
-    "A plug for verifing Auth0 JWTs."
+    "A plug for verifing Auth0 JWTs and accessing claims in successful requests."
   end
 
   defp package do
