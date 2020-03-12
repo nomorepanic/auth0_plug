@@ -52,12 +52,16 @@ config :auth0_plug,
 ```
 
 
-It's possible to specify which key to extract from the JWT:
+It's possible to specify which keys to extract from the JWT:
 
 ```elixir
 config :auth0_plug,
-    key_to_extract: "email"
+    extractions: [
+        {"jwt_claim", :conn_private_key},
+        {nil, :extracts_all_the_jwt}
+    ]
 ```
+
 
 To exclude paths from 401:
 
