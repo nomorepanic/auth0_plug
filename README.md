@@ -26,13 +26,13 @@ Configuration:
 config :auth0_plug,
   secret: "secret",
   realm: "realm",
-  conn_key: :auth0_plug_jwt
+  extractions: [{nil, :auth0_jwt}]
 ```
 
 You can find the jwt in conn.private:
 
 ```elixir
-conn.private[:auth0_plug_jwt]
+conn.private[:auth0_jwt]
 ```
 
 In case of failure the plug will return automatically a 401. If you don't want
