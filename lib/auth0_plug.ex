@@ -88,4 +88,9 @@ defmodule Auth0Plug do
       {:error, _jwt} -> Auth0Plug.unauthorized(conn)
     end
   end
+
+  @doc """
+  Exposes Jwt.get/1
+  """
+  def get_jwt(conn), do: Jwt.get(conn)
 end

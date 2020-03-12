@@ -133,12 +133,17 @@ defmodule Auth0PlugTest do
       {"get", :token},
       {"verify", fn _a, _b -> {:error, :jwt} end}
     ] do
-      dummy Auth0Plug, [
-        {"unauthorized", :unauthorized}
-      ] do
+      dummy Auth0Plug, [{"unauthorized", :unauthorized}] do
         assert Auth0Plug.call(:conn, :options) == :unauthorized
         assert called(Auth0Plug.unauthorized(:conn))
       end
+    end
+  end
+
+  test "get_jwt/1" do
+    dummy Jwt, [{"get", :get}] do
+      assert Auth0Plug.get_jwt(:conn) == :get
+      assert called(Jwt.get(:conn))
     end
   end
 end
