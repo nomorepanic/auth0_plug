@@ -30,6 +30,14 @@ defmodule Auth0Plug.Jwt do
     end
   end
 
+  def put_extraction(conn, jwt, {key, conn_key}) do
+    if key == nil do
+      Conn.put_private(conn, conn_key, jwt)
+    else
+      Conn.put_private(conn, conn_key, Map.get(jwt, key))
+    end
+  end
+
   def put(conn, jwt) do
     key_to_extract = Application.get_env(:auth0_plug, :key_to_extract)
     value = Map.get(jwt, :fields)
