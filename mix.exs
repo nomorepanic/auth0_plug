@@ -9,7 +9,11 @@ defmodule Auth0Plug.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: description(),
-      package: package()
+      package: package(),
+      docs: [
+        main: "readme",
+        extras: ["README.md": [title: "Auth0Plug"]]
+      ]
     ]
   end
 
