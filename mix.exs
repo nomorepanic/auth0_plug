@@ -4,7 +4,7 @@ defmodule Auth0Plug.MixProject do
   def project do
     [
       app: :auth0_plug,
-      version: "1.3.0",
+      version: "1.4.0",
       elixir: "~> 1.10",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -40,7 +40,7 @@ defmodule Auth0Plug.MixProject do
       name: :auth0_plug,
       files: ~w(mix.exs lib .formatter.exs README.md LICENSE),
       maintainers: ["Jacopo Cascioli"],
-      licenses: ["MPL 2.0"],
+      licenses: ["MPL-2.0"],
       links: %{"GitHub" => "https://github.com/nomorepanic/auth0_plug"}
     ]
   end
