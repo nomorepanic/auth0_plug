@@ -41,7 +41,7 @@ defmodule Auth0Plug.MixProject do
       files: ~w(mix.exs lib .formatter.exs README.md LICENSE),
       maintainers: ["Jacopo Cascioli"],
       licenses: ["MPL 2.0"],
-      links: %{"GitHub" => "https://github.com/Vesuvium/auth0_plug"}
+      links: %{"GitHub" => "https://github.com/nomorepanic/auth0_plug"}
     ]
   end
 
