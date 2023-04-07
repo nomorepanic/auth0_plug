@@ -5,8 +5,8 @@ defmodule Auth0Plug do
   alias Auth0Plug.Jwt
   alias Plug.Conn
 
-  @realm Application.get_env(:auth0_plug, :realm)
-  @secret Application.get_env(:auth0_plug, :secret)
+  @realm Application.compile_env(:auth0_plug, :realm)
+  @secret Application.compile_env(:auth0_plug, :secret)
 
   if @secret == nil do
     "Auth0Plug's secret is set to nil. Authentication will always fail."
