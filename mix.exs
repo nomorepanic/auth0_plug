@@ -5,7 +5,7 @@ defmodule Auth0Plug.MixProject do
     [
       app: :auth0_plug,
       version: "1.3.0",
-      elixir: "~> 1.9",
+      elixir: "~> 1.10",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       test_coverage: [tool: ExCoveralls],
