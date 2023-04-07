@@ -47,7 +47,7 @@ defmodule Auth0Plug.MixProject do
 
   defp deps do
     [
-      {:credo, "~> 0.9", only: :dev, runtime: false},
+      {:credo, "~> 1.7", only: :dev, runtime: false},
       {:ex_doc, "~> 0.21", only: :dev, runtime: false},
       {:excoveralls, "~> 0.16", only: :test},
       {:dummy, "~> 1.2", only: :test},
